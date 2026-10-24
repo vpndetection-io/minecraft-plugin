@@ -5,7 +5,7 @@
 
 The official [VPNDetection](https://vpndetection.io) plugin for Minecraft servers.
 
-It checks each player's address as they join and refuses, or flags to your staff, the ones who come through a VPN, a proxy, Tor or a hosting network. That keeps banned players from coming back on a new address and bots from flooding in from rented servers. One jar runs on Paper, Spigot, Folia, Velocity and BungeeCord.
+It checks each player's address as they join, and refuses or flags to your staff the ones who come through a VPN, a proxy, Tor or a hosting network. That keeps banned players from coming back on a new address and bots from flooding in from rented servers. One jar runs on Paper, Spigot, Folia, Velocity and BungeeCord.
 
 ## Getting Started
 
