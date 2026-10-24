@@ -18,9 +18,14 @@ M2_DIR="${M2_DIR:-${HOME}/.m2}"
 
 mkdir -p "$M2_DIR"
 
+mounts=(-v "$PWD:/w" -v "$M2_DIR:/root/.m2")
+# A local repository that is a symlink points outside the mount, where the container cannot follow it.
+if [ -L "$M2_DIR/repository" ]; then
+    mounts+=(-v "$(realpath "$M2_DIR/repository"):/root/.m2/repository")
+fi
+
 docker run --rm \
-    -v "$PWD:/w" \
-    -v "$M2_DIR:/root/.m2" \
+    "${mounts[@]}" \
     -w /w \
     -e MAVEN_CONFIG=/root/.m2 \
     "$MAVEN_IMAGE" mvn -B -Duser.home=/root "$@"
