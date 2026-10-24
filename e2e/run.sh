@@ -93,38 +93,39 @@ simulation-distance=2
 EOF
     fi
 
-    # The first start writes the server's own config files, which the second start reads.
-    boot "$target" "$project" "$jdk" "$dir"
+    # The first start writes the server's own config files, which the second start reads. This
+    # function runs inside an if, where set -e does not reach, so each edit says when it fails.
+    boot "$target" "$project" "$jdk" "$dir" || return 1
     stop_target "$target"
     case "$project" in
         paper | folia)
-            sed -i 's/proxy-protocol: false/proxy-protocol: true/' "$dir/config/paper-global.yml"
+            sed -i 's/proxy-protocol: false/proxy-protocol: true/' "$dir/config/paper-global.yml" || return 1
             ;;
         velocity)
             sed -i -e 's/^online-mode = true/online-mode = false/' \
                 -e 's/^haproxy-protocol = false/haproxy-protocol = true/' \
-                -e "s/^bind = .*/bind = \"0.0.0.0:$port\"/" "$dir/velocity.toml"
+                -e "s/^bind = .*/bind = \"0.0.0.0:$port\"/" "$dir/velocity.toml" || return 1
             ;;
         bungeecord)
             sed -i -e 's/online_mode: true/online_mode: false/' \
                 -e 's/proxy_protocol: false/proxy_protocol: true/' \
-                -e "s/host: 0.0.0.0:25577/host: 0.0.0.0:$port/" "$dir/config.yml"
+                -e "s/host: 0.0.0.0:25577/host: 0.0.0.0:$port/" "$dir/config.yml" || return 1
             ;;
     esac
 
     # The shipped config, with a key so every answer is the paid plan's, and one country refused.
     sed -e 's/^api-key: ""/api-key: "e2e-0123456789abcdef"/' \
         -e 's/^  block: \[\]/  block: [CN]/' \
-        "$ROOT/core/src/main/resources/io/vpndetection/minecraft/config.yml" > "$data/config.yml"
-    echo "8.8.4.4  # staff" > "$data/bypass.txt"
+        "$ROOT/core/src/main/resources/io/vpndetection/minecraft/config.yml" > "$data/config.yml" || return 1
+    echo "8.8.4.4  # staff" > "$data/bypass.txt" || return 1
 
     : > "$dir/stub.log"
     java "$ROOT/e2e/StubApi.java" "$STUB_PORT" "$dir/stub.log" > "$dir/stub.out" 2>&1 &
     STUB_PID=$!
     wait_for "$dir/stub.out" "listening on" 60
 
-    boot "$target" "$project" "$jdk" "$dir"
-    wait_for "$dir/console.log" "VPNDetection $VERSION on " 60
+    boot "$target" "$project" "$jdk" "$dir" || return 1
+    wait_for "$dir/console.log" "VPNDetection $VERSION on " 60 || return 1
 
     # BungeeCord sends a player to a server behind it before finishing their login, and the run has
     # none, so a player it let in is turned away by BungeeCord itself, with this message.
@@ -207,7 +208,10 @@ boot() {
     fi
     : > "$dir/console.log"
     docker rm -f "vpnd-e2e-$target" > /dev/null 2>&1 || true
-    docker run -d --name "vpnd-e2e-$target" --network host -v "$dir:/srv" -w /srv "$image" \
+    # As the user running this, so the files the server writes stay editable here: on a CI runner,
+    # which is not root, a root container's config files could not be changed between the starts.
+    docker run -d --name "vpnd-e2e-$target" --network host --user "$(id -u):$(id -g)" -e HOME=/srv \
+        -v "$dir:/srv" -w /srv "$image" \
         java -Xmx1G "-Dvpndetection.api-url=http://127.0.0.1:$STUB_PORT" -jar server.jar "${args[@]}" > /dev/null
     docker logs -f "vpnd-e2e-$target" > "$dir/console.log" 2>&1 &
     if ! wait_for "$dir/console.log" "Done \\(|Listening on " 300; then
