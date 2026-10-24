@@ -1,0 +1,67 @@
+# VPNDetection checks each player's address as they join, and refuses or flags the ones that come
+# through a VPN, a proxy, Tor or a hosting network. Run /vpnd reload after editing this file.
+# Guide: https://docs.vpndetection.io/integrations/minecraft
+
+# Your API key. Run /vpnd login to sign in and have it filled in for you, or paste one from
+# https://app.vpndetection.io. Without a key only VPNs are checked, on a small daily allowance.
+api-key: ""
+
+# What happens when a joining player's address is one of these:
+#   block   refuse the login with the kick message below
+#   alert   let them in, and tell staff who hold vpndetection.alerts
+#   allow   do nothing
+checks:
+  # Commercial VPN servers.
+  vpn: block
+  # Tor relays. Needs a key.
+  tor: block
+  # Datacenters and cloud providers, where bots and self-hosted VPNs run. Needs a key.
+  hosting: block
+  # Residential, datacenter, mobile and public proxies. Needs a paid plan.
+  proxy: block
+  # Privacy relays and company web gateways, like iCloud Private Relay. Needs a key.
+  relay: allow
+
+# Countries by two-letter code, like US, DE or BR. Needs a key.
+countries:
+  # Refuse players from these countries.
+  block: []
+  # Refuse players from every country but these. Leave it empty to let in every country.
+  allow: []
+
+# Rules on any field of the answer, for what the checks above don't cover. A rule's match is written
+# in the shape of the answer, and holds when every field it names does: a list means any of them,
+# and {gte: 5} compares a number. Each rule blocks or alerts, and its reason shows in the messages.
+# The fields are listed in the guide.
+rules: []
+#  - action: block
+#    reason: NordVPN
+#    match:
+#      vpn:
+#        provider: nordvpn
+#  - action: alert
+#    reason: a busy residential proxy
+#    match:
+#      resproxy:
+#        hits: {gte: 5}
+
+# Players and addresses that are never checked live in bypass.txt, beside this file.
+# /vpnd bypass add <player|address|range> adds one.
+
+messages:
+  # Shown to a player refused by a check or a rule. {reason} says what matched, like "VPN (nordvpn)".
+  kick: "&cYou can't join from this connection: {reason}.\n&7Turn off your VPN or proxy and join again."
+  # Shown to a player refused by country.
+  kick-country: "&cThis server doesn't accept players from your country."
+  # Shown when a lookup failed and fail-closed is true.
+  failed: "&cWe couldn't check your connection.\n&7Try again in a minute."
+  # Sent to staff who hold vpndetection.alerts, and logged. Leave one empty to turn it off.
+  alert: "&8[&3VPNDetection&8] &f{player} &7joined from &f{ip}&7: &e{reason}"
+  blocked: "&8[&3VPNDetection&8] &7Refused &f{player} &7from &f{ip}&7: &c{reason}"
+
+# When a lookup fails, because our API can't be reached or your allowance is spent: false lets the
+# player in, so an outage of ours never locks out your players; true refuses them.
+fail-closed: false
+
+# How long an address's answer is reused before it's looked up again, in minutes.
+cache-minutes: 60

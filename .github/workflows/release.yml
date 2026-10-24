@@ -1,0 +1,47 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  # The plugin jar, and this version's section of CHANGELOG.md, as the tag's GitHub Release.
+  github-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      # The tag only triggers this; the jar is named after whatever pom.xml says.
+      - name: Tag must match pom.xml version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          pom="$(mvn -B -q help:evaluate -Dexpression=project.version -DforceStdout)"
+          if [ "$tag" != "$pom" ] ; then
+            echo "tag $tag does not match pom.xml version $pom" >&2
+            exit 1
+          fi
+      - run: mvn -B verify
+      - name: GitHub Release from CHANGELOG.md
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          awk -v v="$version" '/^## /{ if (found) exit; found = ($2 == v); next } found' CHANGELOG.md > notes.md
+          if ! grep -q '^### ' notes.md ; then
+            echo "CHANGELOG.md has no section for ${version}" >&2
+            exit 1
+          fi
+          jar="dist/target/VPNDetection-${version}.jar"
+          if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1 ; then
+            gh release edit "$GITHUB_REF_NAME" --notes-file notes.md
+            gh release upload "$GITHUB_REF_NAME" "$jar" --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" "$jar" --title "$GITHUB_REF_NAME" --notes-file notes.md --verify-tag
+          fi

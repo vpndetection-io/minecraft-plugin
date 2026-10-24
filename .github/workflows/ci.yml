@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # The floor the plugin targets, and the newest LTS servers run on.
+        java: ['17', '21']
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: maven
+      - run: mvn -B verify
+
+  # Real Paper, Folia, Velocity and BungeeCord servers, each joined from addresses a stub of the API
+  # answers for. Downloads each server once; actions/cache keeps them between runs.
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - uses: actions/cache@v6
+        with:
+          path: e2e/.cache
+          key: e2e-servers-${{ hashFiles('e2e/run.sh') }}
+      - run: mvn -B -DskipTests package
+      - run: JAR=dist/target/VPNDetection-$(mvn -B -q help:evaluate -Dexpression=project.version -DforceStdout).jar ./e2e/run.sh

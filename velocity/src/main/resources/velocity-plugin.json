@@ -1,0 +1,10 @@
+{
+  "id": "vpndetection",
+  "name": "VPNDetection",
+  "version": "${project.version}",
+  "description": "Refuses or flags players who join through a VPN, proxy, Tor or hosting network.",
+  "url": "https://vpndetection.io",
+  "authors": ["VPNDetection"],
+  "dependencies": [],
+  "main": "io.vpndetection.minecraft.velocity.VPNDetectionVelocity"
+}

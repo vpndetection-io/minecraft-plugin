@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.vpndetection</groupId>
+    <artifactId>vpndetection-minecraft</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <name>VPNDetection for Minecraft</name>
+    <description>Refuse or flag players who join a Minecraft server through a VPN, proxy, Tor or hosting network.</description>
+    <url>https://vpndetection.io</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/vpndetection-io/minecraft-plugin</url>
+    </scm>
+
+    <!-- One jar runs on every platform: each reads its own manifest (plugin.yml, bungee.yml,
+         velocity-plugin.json) and loads only its own entry point, and core is the logic they share.
+         dist shades the four together with the SDK. -->
+    <modules>
+        <module>core</module>
+        <module>paper</module>
+        <module>velocity</module>
+        <module>bungee</module>
+        <module>dist</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- The SDK's floor, and the oldest Java any supported server runs on. -->
+        <maven.compiler.release>17</maven.compiler.release>
+        <vpndetection.version>6.9.1</vpndetection.version>
+        <snakeyaml.version>2.7</snakeyaml.version>
+        <!-- Each API is an OLD release, so nothing newer is called by accident: paper-api 1.20.1 is
+             the first with Folia's schedulers, and velocity-api 3.4.0 the last Velocity on Java 17.
+             Newer servers run the same calls, which e2e/run.sh proves on the newest of each. -->
+        <paper.version>1.20.1-R0.1-SNAPSHOT</paper.version>
+        <velocity.version>3.4.0</velocity.version>
+        <bungeecord.version>1.21-R0.4</bungeecord.version>
+        <junit.version>5.14.4</junit.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>papermc</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.vpndetection</groupId>
+                <artifactId>vpndetection-minecraft-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.vpndetection</groupId>
+                <artifactId>vpndetection</artifactId>
+                <version>${vpndetection.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${snakeyaml.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.papermc.paper</groupId>
+                <artifactId>paper-api</artifactId>
+                <version>${paper.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.velocitypowered</groupId>
+                <artifactId>velocity-api</artifactId>
+                <version>${velocity.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.md-5</groupId>
+                <artifactId>bungeecord-api</artifactId>
+                <version>${bungeecord.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.16.0</version>
+                    <configuration>
+                        <compilerArgs>
+                            <arg>-Xlint:all,-processing,-serial</arg>
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.5.6</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.3.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.5.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>3.6.2</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

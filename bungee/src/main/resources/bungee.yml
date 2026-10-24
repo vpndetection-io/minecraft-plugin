@@ -1,0 +1,6 @@
+name: VPNDetection
+version: '${project.version}'
+main: io.vpndetection.minecraft.bungee.VPNDetectionBungee
+description: Refuses or flags players who join through a VPN, proxy, Tor or hosting network.
+author: VPNDetection
+website: https://vpndetection.io

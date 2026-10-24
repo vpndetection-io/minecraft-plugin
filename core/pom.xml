@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.vpndetection</groupId>
+        <artifactId>vpndetection-minecraft</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>vpndetection-minecraft-core</artifactId>
+    <name>VPNDetection for Minecraft: core</name>
+    <description>What every platform shares: the settings, the decision, the bypass list, the commands and the sign-in.</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.vpndetection</groupId>
+            <artifactId>vpndetection</artifactId>
+        </dependency>
+        <!-- Shaded rather than taken from the server: Bukkit, BungeeCord and Velocity each ship a
+             different SnakeYAML, 1.x on older ones, whose constructors differ. One copy parses
+             config.yml the same way everywhere. -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>io/vpndetection/minecraft/vpndetection-minecraft.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>io/vpndetection/minecraft/vpndetection-minecraft.properties</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </build>
+</project>

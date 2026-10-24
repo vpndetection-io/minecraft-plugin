@@ -1,0 +1,20 @@
+name: VPNDetection
+version: '${project.version}'
+main: io.vpndetection.minecraft.paper.VPNDetectionPaper
+api-version: '1.13'
+folia-supported: true
+description: Refuses or flags players who join through a VPN, proxy, Tor or hosting network.
+author: VPNDetection
+website: https://vpndetection.io
+commands:
+  vpndetection:
+    description: Look up a player, sign in, and edit the bypass list.
+    aliases: [vpnd]
+    usage: /vpnd help
+permissions:
+  vpndetection.admin:
+    description: Run every /vpnd command.
+    default: op
+  vpndetection.alerts:
+    description: Be told in chat about refused and flagged logins.
+    default: op
