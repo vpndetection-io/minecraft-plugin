@@ -93,22 +93,27 @@ simulation-distance=2
 EOF
     fi
 
-    # The first start writes the server's own config files, which the second start reads. This
-    # function runs inside an if, where set -e does not reach, so each edit says when it fails.
+    # The first start writes the server's own config files, which the second start reads: online
+    # mode off, the PROXY header trusted, and the reconnect throttles off, since the run joins from
+    # one address twice within their seconds. This function runs inside an if, where set -e does not
+    # reach, so each edit says when it fails.
     boot "$target" "$project" "$jdk" "$dir" || return 1
     stop_target "$target"
     case "$project" in
         paper | folia)
             sed -i 's/proxy-protocol: false/proxy-protocol: true/' "$dir/config/paper-global.yml" || return 1
+            sed -i 's/connection-throttle: [0-9]*/connection-throttle: -1/' "$dir/bukkit.yml" || return 1
             ;;
         velocity)
             sed -i -e 's/^online-mode = true/online-mode = false/' \
                 -e 's/^haproxy-protocol = false/haproxy-protocol = true/' \
+                -e 's/^login-ratelimit = .*/login-ratelimit = 0/' \
                 -e "s/^bind = .*/bind = \"0.0.0.0:$port\"/" "$dir/velocity.toml" || return 1
             ;;
         bungeecord)
             sed -i -e 's/online_mode: true/online_mode: false/' \
                 -e 's/proxy_protocol: false/proxy_protocol: true/' \
+                -e 's/connection_throttle: [0-9]*/connection_throttle: 0/' \
                 -e "s/host: 0.0.0.0:25577/host: 0.0.0.0:$port/" "$dir/config.yml" || return 1
             ;;
     esac
