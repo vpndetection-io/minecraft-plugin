@@ -33,7 +33,7 @@ It runs on Java 17 or newer: Paper, Spigot, Purpur, Folia and other Bukkit serve
 | `proxy` | Residential, datacenter, mobile and public proxies | a paid plan | `block` |
 | `relay` | Privacy relays and company web gateways, like iCloud Private Relay | a free key | `allow` |
 
-With a free key, `hosting` goes by the kind of network announcing the address. A paid plan answers it for each address, and names the VPN, hosting or proxy provider in your messages. A check your plan doesn't answer is skipped, and the console says so once. [Plans](https://vpndetection.io/pricing).
+With a free key, `hosting` goes by the kind of network announcing the address. A paid plan answers it for each address, and names the VPN, hosting or proxy provider in your messages. A check your plan doesn't answer is skipped, and the console says so once. The [pricing page](https://vpndetection.io/pricing) says what each plan answers.
 
 Countries need a free key. List the two-letter codes to refuse in `countries.block`, or the only ones to let in in `countries.allow`:
 
