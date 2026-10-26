@@ -2,6 +2,12 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.0.1 - 2026-10-26
+
+### Fixes
+
+- Bundle vpndetection 6.10.0: a key outside ASCII is named at load ([`5ebd558`](https://github.com/vpndetection-io/minecraft-plugin/commit/5ebd55826b9e07e5d8b59ee07be16d1d7e53dab2))
+
 ## 1.0.0 - 2026-10-24
 
 ### Features
