@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EngineTest {
@@ -149,6 +150,19 @@ class EngineTest {
         enable();
         String said = waitFor(platform.warnings, "The API key");
         assertTrue(said.contains("was refused"), said);
+    }
+
+    // Through SDK 6.9.1 a key holding é went out with a question mark in its place, so every lookup
+    // failed as a wrong key; from 6.10.0 the builder refuses it, and the reload says why.
+    @Test
+    void aKeyOutsideAsciiIsSaidSoAndLookupsGoWithoutOne() throws Exception {
+        api.answer("/" + VPN_IP, Answers.keyless(VPN_IP, true));
+        enable();
+        Files.writeString(dir.resolve("config.yml"), "api-key: \"vd_test_0123456789abcdé\"\n");
+        assertEquals(List.of("the API key can't be used (the API key holds a character outside ASCII), "
+                + "so lookups go without one"), engine.reload());
+        assertTrue(engine.login("Steve", UUID.randomUUID(), InetAddress.getByName(VPN_IP)).isBlocked());
+        assertNull(api.requests.get(api.requests.size() - 1).header("Authorization"));
     }
 
     @Test

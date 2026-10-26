@@ -39,7 +39,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- The SDK's floor, and the oldest Java any supported server runs on. -->
         <maven.compiler.release>17</maven.compiler.release>
-        <vpndetection.version>6.9.1</vpndetection.version>
+        <vpndetection.version>6.10.0</vpndetection.version>
         <snakeyaml.version>2.7</snakeyaml.version>
         <!-- Each API is an OLD release, so nothing newer is called by accident: paper-api 1.20.1 is
              the first with Folia's schedulers, and velocity-api 3.4.0 the last Velocity on Java 17.
