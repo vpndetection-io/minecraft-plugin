@@ -4,7 +4,7 @@
 # answers for, and checks what every login came to.
 #
 #   ./e2e/run.sh                          # every target
-#   ./e2e/run.sh paper-26.3 velocity-4.3.0
+#   ./e2e/run.sh paper-26.3 velocity-4.3.1
 #   JAR=dist/target/VPNDetection-1.0.0.jar ./e2e/run.sh   # skip the build
 #
 # Needs docker, java 17 or newer (the probe and the stub run on the host), curl, jq and sha256sum.
@@ -24,7 +24,7 @@ TARGETS=(
     "folia-26.3 folia 26.3 25"
     "paper-1.21.11 paper 1.21.11 21"
     "paper-1.20.1 paper 1.20.1 17"
-    "velocity-4.3.0 velocity 4.3.0 25"
+    "velocity-4.3.1 velocity 4.3.1 25"
     "velocity-3.4.0 velocity 3.4.0 17"
     "bungeecord bungeecord latest 21"
 )
