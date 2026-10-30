@@ -2,6 +2,12 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.0.2 - 2026-10-30
+
+### Fixes
+
+- Bundle vpndetection 6.10.1: a negative retry count per call is refused ([`4fff912`](https://github.com/vpndetection-io/minecraft-plugin/commit/4fff91240d9b64a3887ce4f4f76ac2f8f2e85824))
+
 ## 1.0.1 - 2026-10-26
 
 ### Fixes
