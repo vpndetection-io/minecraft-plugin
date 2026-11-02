@@ -2,6 +2,12 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.0.3 - 2026-11-02
+
+### Fixes
+
+- Bundle vpndetection 6.11.0: it no longer brings Apache HttpClient ([`73670d3`](https://github.com/vpndetection-io/minecraft-plugin/commit/73670d3b4819f7f2da8f9510de13add4831e6003))
+
 ## 1.0.2 - 2026-10-30
 
 ### Fixes
