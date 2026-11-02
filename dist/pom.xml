@@ -56,13 +56,8 @@
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <artifactSet>
-                                <!-- The SDK declares Apache HttpClient for form bodies, but no class in
-                                     its jar refers to it, and the annotation jars hold nothing a running
-                                     server reads. -->
+                                <!-- The annotation jars hold nothing a running server reads. -->
                                 <excludes>
-                                    <exclude>org.apache.httpcomponents:*</exclude>
-                                    <exclude>commons-logging:*</exclude>
-                                    <exclude>commons-codec:*</exclude>
                                     <exclude>org.jspecify:*</exclude>
                                     <exclude>com.google.errorprone:*</exclude>
                                 </excludes>
