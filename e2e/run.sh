@@ -66,7 +66,7 @@ run_target() {
     local server
     server=$(download "$project" "$version")
     rm -rf "${dir:?}"
-    # Velocity names a plugin's folder by its id, the others by its name.
+    # Velocity names a plugin's folder by its ID, the others by its name.
     local data=$dir/plugins/VPNDetection
     if [[ "$project" == "velocity" ]]; then
         data=$dir/plugins/vpndetection
