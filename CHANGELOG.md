@@ -2,6 +2,12 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.0.4 - 2026-11-07
+
+### Fixes
+
+- Bundle vpndetection 6.11.1: /vpnd login stops asking at the code's expiry ([`941539c`](https://github.com/vpndetection-io/minecraft-plugin/commit/941539c674362b5c8a65c098ab40a6c92c0b9c6f))
+
 ## 1.0.3 - 2026-11-02
 
 ### Fixes
