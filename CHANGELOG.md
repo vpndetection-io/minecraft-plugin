@@ -2,6 +2,12 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.0.5 - 2026-11-08
+
+### Fixes
+
+- Bundle vpndetection 6.12.0, which changes no call the plugin makes ([`9579c2d`](https://github.com/vpndetection-io/minecraft-plugin/commit/9579c2daed9c3a501664fbeb88b16fbb8fbad9ce))
+
 ## 1.0.4 - 2026-11-07
 
 ### Fixes
