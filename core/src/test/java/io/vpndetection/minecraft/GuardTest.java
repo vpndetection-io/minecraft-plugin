@@ -86,13 +86,13 @@ class GuardTest {
     }
 
     @Test
-    void aTrialKeyPastItsDayIsAnsweredAsUnlimitedAndSaysWhatItLacks() throws Exception {
+    void aFreePlanKeyPastItsDailyTrialIsAnsweredAsUnlimitedAndSaysWhatItLacks() throws Exception {
         String ip = "146.70.116.130";
         api.answer("/" + ip, Answers.trial(Answers.keyless(ip, false, false, Answers.LOCATION_AT, Answers.ASN_M247), true));
         Verdict verdict = check(guard("api-key: \"vd_test_0123456789abcdef\"\nchecks: {hosting: block, proxy: block}", ""), ip);
         assertEquals(Action.BLOCK, verdict.action());
         assertEquals("hosting network (M247 Europe SRL)", verdict.reason());
-        assertTrue(warnings.stream().anyMatch(w -> w.startsWith("checks.proxy is block") && w.contains("trial")),
+        assertTrue(warnings.stream().anyMatch(w -> w.startsWith("checks.proxy is block") && w.contains("free plan")),
                 warnings.toString());
     }
 

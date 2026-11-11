@@ -23,11 +23,10 @@ class EngineTest {
             + "\"apikey\":{\"id\":\"10c2b437-3aa2-4a63-bd17-8e7c8c7f0def\",\"expires\":null,\"allowed_cidrs\":[]},"
             + "\"plan\":{\"key\":\"starter\",\"tier\":\"starter\"},\"usage\":{\"requests\":545,\"quota\":250000,"
             + "\"hard_limit\":null,\"window_start\":\"2026-10-01T00:00:00Z\",\"window_end\":\"2026-11-01T00:00:00Z\"}}";
-    // An organization on no paid plan, on Unlimited: its entitlement names it `trial` and counts the UTC
-    // day's lookups with every field.
-    private static final String TRIAL_ENTITLEMENT = "{\"org_id\":\"f32191d0-ef02-450e-a505-eb5814c35cab\","
+    // An organization on the free plan, Unlimited: its usage counts the UTC day's lookups with every field.
+    private static final String FREE_PLAN_ENTITLEMENT = "{\"org_id\":\"f32191d0-ef02-450e-a505-eb5814c35cab\","
             + "\"apikey\":{\"id\":\"10c2b437-3aa2-4a63-bd17-8e7c8c7f0def\",\"expires\":null,\"allowed_cidrs\":[]},"
-            + "\"plan\":{\"key\":\"trial\",\"tier\":\"free\"},\"usage\":{\"requests\":45,\"quota\":100,"
+            + "\"plan\":{\"key\":\"free\",\"tier\":\"free\"},\"usage\":{\"requests\":45,\"quota\":100,"
             + "\"hard_limit\":null,\"window_start\":\"2026-11-11T00:00:00Z\",\"window_end\":\"2026-11-12T00:00:00Z\"}}";
 
     @TempDir
@@ -150,7 +149,7 @@ class EngineTest {
 
     @Test
     void aKeyOnNoPaidPlanIsNamedUnlimited() throws Exception {
-        api.answer("/api/v1/entitlement", TRIAL_ENTITLEMENT);
+        api.answer("/api/v1/entitlement", FREE_PLAN_ENTITLEMENT);
         Files.createDirectories(dir);
         Files.writeString(dir.resolve("config.yml"), "api-key: \"vd_test_0123456789abcdef\"\n");
         enable();

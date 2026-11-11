@@ -207,15 +207,18 @@ public final class Commands {
         }
     }
 
+    /** The plan an organization with no subscription is on, which the site and console call Unlimited. */
+    static final String FREE_PLAN = "free";
+
     /**
      * A plan and what is left of it, like "Starter plan, 1,234 of 250,000 lookups used, renewing 2026-12-01".
-     * An organization on no paid plan is on Unlimited (2026-11-11): every lookup is answered with no cap and
-     * its first ones each UTC day with every field, which is what its count is of, so it reads "Unlimited
-     * plan, 45 of 100 lookups with every field used today". Its entitlement names it `trial`.
+     * The free plan, Unlimited (2026-11-11), answers every lookup with no cap and the first ones each UTC day
+     * with every field, its daily trial, which is what its usage counts, so it reads "Unlimited plan, 45 of
+     * 100 lookups with every field used today".
      */
     static String usage(Entitlement entitlement) {
         String key = entitlement.getPlan() == null ? null : entitlement.getPlan().getKey();
-        if ("trial".equals(key) && entitlement.getUsage() != null
+        if (FREE_PLAN.equals(key) && entitlement.getUsage() != null
                 && entitlement.getUsage().getRequests() != null && entitlement.getUsage().getQuota() != null) {
             return String.format(Locale.ROOT, "Unlimited plan, %,d of %,d lookups with every field used today",
                     entitlement.getUsage().getRequests(), entitlement.getUsage().getQuota());

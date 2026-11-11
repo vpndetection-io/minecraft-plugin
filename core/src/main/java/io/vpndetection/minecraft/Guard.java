@@ -136,7 +136,7 @@ final class Guard {
     private String needs(Check check) {
         return settings.apiKey == null
                 ? "it needs a paid plan, which signing in tries for 100 lookups a day (run /vpnd login)"
-                : "your plan doesn't answer it past a trial's 100 lookups a day";
+                : "the free plan answers it only for the first 100 lookups each day";
     }
 
     /** The reasons for each action seen, to report the strongest action's. */
