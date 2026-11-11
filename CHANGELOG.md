@@ -2,6 +2,12 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.0.8 - 2026-11-11
+
+### Fixes
+
+- Name a key on no paid plan's plan Unlimited, not Trial ([`aa2b82e`](https://github.com/vpndetection-io/minecraft-plugin/commit/aa2b82efe68459f115d4471dbc8fde7ad8324071))
+
 ## 1.0.7 - 2026-11-11
 
 ### Features
