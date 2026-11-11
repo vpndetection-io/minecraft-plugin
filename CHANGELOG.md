@@ -2,6 +2,12 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.0.9 - 2026-11-11
+
+### Fixes
+
+- Read the free plan's key, free, and say the free plan, not a trial ([`d7a157e`](https://github.com/vpndetection-io/minecraft-plugin/commit/d7a157e1188e63ef9a241d11b9400990e1e06164))
+
 ## 1.0.8 - 2026-11-11
 
 ### Fixes
