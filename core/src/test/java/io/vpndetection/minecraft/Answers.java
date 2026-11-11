@@ -30,12 +30,9 @@ final class Answers {
         return keyless(ip, vpn, false, LOCATION_BR, ASN_ISP);
     }
 
-    /** A free key: every flag, with no detail behind those a key adds. */
-    static String free(String ip, boolean vpn, boolean tor, boolean hosting, boolean resproxy, String location,
-            String asn) {
-        String keyless = keyless(ip, vpn, tor, location, asn);
-        return keyless.substring(0, keyless.length() - 1) + ",\"is_hosting\":" + hosting + ",\"is_cdn\":false,"
-                + "\"is_resproxy\":" + resproxy + ",\"is_dcproxy\":false,\"is_mobproxy\":false,\"is_pubproxy\":false}";
+    /** A Trial key, an account on no paid plan: the paid answer while its day's 100 last, Unlimited's after. */
+    static String trial(String unlimitedOrPaid, boolean expired) {
+        return unlimitedOrPaid.substring(0, unlimitedOrPaid.length() - 1) + ",\"trial_expired\":" + expired + "}";
     }
 
     /** A paid plan: every member, here a NordVPN exit in an OVH range also seen in a residential pool. */

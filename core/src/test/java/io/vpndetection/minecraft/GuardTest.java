@@ -71,7 +71,7 @@ class GuardTest {
         api.answer("/" + VPN_IP, Answers.keyless(VPN_IP, false));
         Verdict verdict = check(guard("checks: {proxy: block}", ""), VPN_IP);
         assertEquals(Action.ALLOW, verdict.action());
-        assertTrue(warnings.stream().anyMatch(w -> w.startsWith("checks.proxy is block") && w.contains("API key")),
+        assertTrue(warnings.stream().anyMatch(w -> w.startsWith("checks.proxy is block") && w.contains("paid plan")),
                 warnings.toString());
         assertFalse(warnings.stream().anyMatch(w -> w.startsWith("checks.tor")), warnings.toString());
     }
@@ -86,12 +86,22 @@ class GuardTest {
     }
 
     @Test
-    void aFreeKeyFlagsHostingAndProxiesAddressByAddressWithoutNamingThem() throws Exception {
+    void aTrialKeyPastItsDayIsAnsweredAsUnlimitedAndSaysWhatItLacks() throws Exception {
         String ip = "146.70.116.130";
-        api.answer("/" + ip, Answers.free(ip, false, false, true, true, Answers.LOCATION_AT, Answers.ASN_M247));
-        Verdict verdict = check(guard("checks: {vpn: alert, hosting: block, proxy: block}", ""), ip);
+        api.answer("/" + ip, Answers.trial(Answers.keyless(ip, false, false, Answers.LOCATION_AT, Answers.ASN_M247), true));
+        Verdict verdict = check(guard("api-key: \"vd_test_0123456789abcdef\"\nchecks: {hosting: block, proxy: block}", ""), ip);
         assertEquals(Action.BLOCK, verdict.action());
-        assertEquals(List.of("hosting", "residential proxy"), verdict.reasons());
+        assertEquals("hosting network (M247 Europe SRL)", verdict.reason());
+        assertTrue(warnings.stream().anyMatch(w -> w.startsWith("checks.proxy is block") && w.contains("trial")),
+                warnings.toString());
+    }
+
+    @Test
+    void aTrialKeyWithinItsDayIsAnsweredInFull() throws Exception {
+        api.answer("/" + VPN_IP, Answers.trial(Answers.paid(VPN_IP), false));
+        Verdict verdict = check(guard("checks: {vpn: alert, hosting: block, proxy: block}", ""), VPN_IP);
+        assertEquals(Action.BLOCK, verdict.action());
+        assertEquals(List.of("hosting (ovh)", "residential proxy (brightdata)"), verdict.reasons());
     }
 
     @Test

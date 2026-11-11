@@ -4,8 +4,8 @@
 
 # Your API key. Run /vpnd login to sign in and have it filled in for you, or paste one from
 # https://app.vpndetection.io. Without a key, every check below works but proxy, and hosting goes by
-# the network an address belongs to. That is for non-commercial servers: a server that sells anything,
-# ranks included, uses a key, a free one included (https://vpndetection.io/terms#no-key).
+# the network an address belongs to. Signed in, a server tries every check, 100 lookups a day, and a
+# paid plan answers them all on every login.
 api-key: ""
 
 # What happens when a joining player's address is one of these:
@@ -20,7 +20,7 @@ checks:
   # Datacenters and cloud providers, where bots and self-hosted VPNs run. Without a key, judged by
   # the network an address belongs to; with one, address by address.
   hosting: block
-  # Residential, datacenter, mobile and public proxies. Needs a key, a free one included.
+  # Residential, datacenter, mobile and public proxies. Needs a paid plan, or a trial's day.
   proxy: block
   # Privacy relays and company web gateways, like iCloud Private Relay.
   relay: allow
