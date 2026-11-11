@@ -2,6 +2,12 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.0.7 - 2026-11-11
+
+### Features
+
+- Name the proxy check a paid plan's, which a signed-in server tries ([`06af3f4`](https://github.com/vpndetection-io/minecraft-plugin/commit/06af3f45c0713f448b7177f7b6e5333659d529df))
+
 ## 1.0.6 - 2026-11-11
 
 ### Features
