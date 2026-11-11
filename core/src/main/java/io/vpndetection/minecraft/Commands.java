@@ -207,8 +207,19 @@ public final class Commands {
         }
     }
 
-    /** A plan and what is left of it, like "Free plan, 1,234 of 50,000 lookups used, renewing 2026-11-01". */
+    /**
+     * A plan and what is left of it, like "Starter plan, 1,234 of 250,000 lookups used, renewing 2026-12-01".
+     * An organization on no paid plan is on Unlimited (2026-11-11): every lookup is answered with no cap and
+     * its first ones each UTC day with every field, which is what its count is of, so it reads "Unlimited
+     * plan, 45 of 100 lookups with every field used today". Its entitlement names it `trial`.
+     */
     static String usage(Entitlement entitlement) {
+        String key = entitlement.getPlan() == null ? null : entitlement.getPlan().getKey();
+        if ("trial".equals(key) && entitlement.getUsage() != null
+                && entitlement.getUsage().getRequests() != null && entitlement.getUsage().getQuota() != null) {
+            return String.format(Locale.ROOT, "Unlimited plan, %,d of %,d lookups with every field used today",
+                    entitlement.getUsage().getRequests(), entitlement.getUsage().getQuota());
+        }
         String plan = entitlement.getPlan() == null || entitlement.getPlan().getKey() == null ? "your"
                 : capitalize(entitlement.getPlan().getKey());
         StringBuilder out = new StringBuilder(plan + " plan");
