@@ -4,7 +4,8 @@
 
 # Your API key. Run /vpnd login to sign in and have it filled in for you, or paste one from
 # https://app.vpndetection.io. Without a key, every check below works but proxy, and hosting goes by
-# the network an address belongs to.
+# the network an address belongs to. That is for non-commercial servers: a server that sells anything,
+# ranks included, uses a key, a free one included (https://vpndetection.io/terms#no-key).
 api-key: ""
 
 # What happens when a joining player's address is one of these:
