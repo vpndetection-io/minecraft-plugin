@@ -7,6 +7,7 @@ What each release changed for you, newest first. Each line is a commit's summary
 ### Features
 
 - Say what a lookup without a key checks: every check but proxy ([`1a582b0`](https://github.com/vpndetection-io/minecraft-plugin/commit/1a582b0d4421b80b79038d1fa00ac30848778591))
+- Say that checking without a key is for non-commercial servers ([`c1dbcfe`](https://github.com/vpndetection-io/minecraft-plugin/commit/c1dbcfeff516464fe3e14bce9d2564bf62106f17))
 
 ## 1.0.5 - 2026-11-08
 
