@@ -168,14 +168,14 @@ class EngineTest {
     @Test
     void aSavedKeyKeepsEveryOtherLineAndIsUsedAtOnce() throws Exception {
         api.answer("/api/v1/entitlement", ENTITLEMENT);
-        api.answer("/" + VPN_IP, Answers.free(VPN_IP, false, true, Answers.LOCATION_AT, Answers.ASN_M247));
+        api.answer("/" + VPN_IP, Answers.free(VPN_IP, false, true, true, false, Answers.LOCATION_AT, Answers.ASN_M247));
         enable();
         String before = Files.readString(dir.resolve("config.yml"));
         assertTrue(engine.saveApiKey("vd_test_0123456789abcdef"));
         String after = Files.readString(dir.resolve("config.yml"));
         assertEquals(before.replace("api-key: \"\"", "api-key: \"vd_test_0123456789abcdef\""), after);
         Verdict verdict = engine.login("Steve", UUID.randomUUID(), InetAddress.getByName(VPN_IP));
-        assertEquals("Tor, hosting network (M247 Europe SRL)", verdict.reason());
+        assertEquals("Tor, hosting", verdict.reason());
         assertTrue(api.requests.stream().anyMatch(r -> ("/" + VPN_IP).equals(r.path())
                 && "Bearer vd_test_0123456789abcdef".equals(r.header("Authorization"))));
     }

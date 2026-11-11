@@ -18,16 +18,24 @@ final class Answers {
     static final String ASN_ISP = "{\"asn\":28573,\"name\":\"Claro NXT\",\"domain\":\"claro.com.br\","
             + "\"type\":\"isp\",\"prefix\":\"177.0.0.0/14\"}";
 
-    /** No key: the address and whether it is a VPN, nothing else. */
-    static String keyless(String ip, boolean vpn) {
-        return "{\"ip\":\"" + ip + "\",\"is_vpn\":" + vpn + "}";
-    }
-
-    /** A free key: Tor and relays beside the VPN flag, and where the address is. */
-    static String free(String ip, boolean vpn, boolean tor, String location, String asn) {
+    /** No key: the VPN, Tor and relay flags, where the address is and the network announcing it. */
+    static String keyless(String ip, boolean vpn, boolean tor, String location, String asn) {
         return "{\"ip\":\"" + ip + "\",\"is_vpn\":" + vpn + ",\"is_relay\":false,\"is_tor\":" + tor
                 + ",\"relay\":{},\"tor\":" + (tor ? "{\"provider\":\"\",\"confidence\":\"high\",\"last_seen\":\"2026-10-20\"}" : "{}")
                 + ",\"location\":" + location + ",\"asn\":" + asn + "}";
+    }
+
+    /** No key, from a home connection in Brazil. */
+    static String keyless(String ip, boolean vpn) {
+        return keyless(ip, vpn, false, LOCATION_BR, ASN_ISP);
+    }
+
+    /** A free key: every flag, with no detail behind those a key adds. */
+    static String free(String ip, boolean vpn, boolean tor, boolean hosting, boolean resproxy, String location,
+            String asn) {
+        String keyless = keyless(ip, vpn, tor, location, asn);
+        return keyless.substring(0, keyless.length() - 1) + ",\"is_hosting\":" + hosting + ",\"is_cdn\":false,"
+                + "\"is_resproxy\":" + resproxy + ",\"is_dcproxy\":false,\"is_mobproxy\":false,\"is_pubproxy\":false}";
     }
 
     /** A paid plan: every member, here a NordVPN exit in an OVH range also seen in a residential pool. */

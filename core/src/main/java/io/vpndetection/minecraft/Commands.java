@@ -129,7 +129,7 @@ public final class Commands {
                 + engine.refused.get() + " &7refused, &f" + engine.flagged.get() + " &7flagged, &f"
                 + engine.bypassed.get() + " &7bypassed, &f" + engine.failed.get() + " &7lookups failed.");
         if (state.apiKey() == null) {
-            say(sender, "&7No API key, so only VPNs are checked. Run &f/vpnd login &7to sign in.");
+            say(sender, "&7No API key, so proxies aren't checked. Run &f/vpnd login &7to sign in.");
             return;
         }
         engine.executor().execute(() -> {

@@ -69,21 +69,29 @@ class GuardTest {
     @Test
     void aCheckThePlanDoesNotAnswerIsReportedOnceAndNeverMatches() throws Exception {
         api.answer("/" + VPN_IP, Answers.keyless(VPN_IP, false));
-        Verdict verdict = check(guard("checks: {tor: block}", ""), VPN_IP);
+        Verdict verdict = check(guard("checks: {proxy: block}", ""), VPN_IP);
         assertEquals(Action.ALLOW, verdict.action());
-        assertTrue(warnings.stream().anyMatch(w -> w.startsWith("checks.tor is block") && w.contains("API key")),
+        assertTrue(warnings.stream().anyMatch(w -> w.startsWith("checks.proxy is block") && w.contains("API key")),
                 warnings.toString());
-        assertTrue(warnings.stream().anyMatch(w -> w.startsWith("checks.proxy") && w.contains("paid plan")),
-                warnings.toString());
+        assertFalse(warnings.stream().anyMatch(w -> w.startsWith("checks.tor")), warnings.toString());
     }
 
     @Test
-    void aFreeKeyFindsAHostingNetworkByTheTypeOfItsAs() throws Exception {
+    void anAnswerWithNoKeyFindsAHostingNetworkByTheTypeOfItsAs() throws Exception {
         String ip = "146.70.116.130";
-        api.answer("/" + ip, Answers.free(ip, false, false, Answers.LOCATION_AT, Answers.ASN_M247));
+        api.answer("/" + ip, Answers.keyless(ip, false, false, Answers.LOCATION_AT, Answers.ASN_M247));
         Verdict verdict = check(guard("checks: {vpn: block, hosting: alert}", ""), ip);
         assertEquals(Action.ALERT, verdict.action());
         assertEquals("hosting network (M247 Europe SRL)", verdict.reason());
+    }
+
+    @Test
+    void aFreeKeyFlagsHostingAndProxiesAddressByAddressWithoutNamingThem() throws Exception {
+        String ip = "146.70.116.130";
+        api.answer("/" + ip, Answers.free(ip, false, false, true, true, Answers.LOCATION_AT, Answers.ASN_M247));
+        Verdict verdict = check(guard("checks: {vpn: alert, hosting: block, proxy: block}", ""), ip);
+        assertEquals(Action.BLOCK, verdict.action());
+        assertEquals(List.of("hosting", "residential proxy"), verdict.reasons());
     }
 
     @Test
@@ -98,7 +106,7 @@ class GuardTest {
     @Test
     void countriesRefuseByBlockListAndByAllowList() throws Exception {
         String ip = "177.1.2.3";
-        api.answer("/" + ip, Answers.free(ip, false, false, Answers.LOCATION_BR, Answers.ASN_ISP));
+        api.answer("/" + ip, Answers.keyless(ip, false, false, Answers.LOCATION_BR, Answers.ASN_ISP));
         Verdict blocked = check(guard("countries: {block: [br]}", ""), ip);
         assertEquals(Action.BLOCK, blocked.action());
         assertEquals("country (BR)", blocked.reason());
@@ -114,15 +122,17 @@ class GuardTest {
     @Test
     void anAddressNoCountryCanBePlacedIsLetIn() throws Exception {
         String ip = "177.1.2.3";
-        api.answer("/" + ip, Answers.free(ip, false, false, Answers.LOCATION_UNKNOWN, Answers.ASN_ISP));
+        api.answer("/" + ip, Answers.keyless(ip, false, false, Answers.LOCATION_UNKNOWN, Answers.ASN_ISP));
         assertEquals(Action.ALLOW, check(guard("countries: {allow: [US]}", ""), ip).action());
     }
 
     @Test
-    void countriesWithNoKeyAreReported() throws Exception {
+    void countriesWorkWithNoKey() throws Exception {
         api.answer("/" + VPN_IP, Answers.keyless(VPN_IP, false));
-        assertEquals(Action.ALLOW, check(guard("countries: {block: [AT]}", ""), VPN_IP).action());
-        assertTrue(warnings.stream().anyMatch(w -> w.startsWith("countries need an API key")), warnings.toString());
+        Verdict verdict = check(guard("countries: {block: [BR]}", ""), VPN_IP);
+        assertEquals(Action.BLOCK, verdict.action());
+        assertEquals("country (BR)", verdict.reason());
+        assertFalse(warnings.stream().anyMatch(w -> w.startsWith("countries")), warnings.toString());
     }
 
     @Test

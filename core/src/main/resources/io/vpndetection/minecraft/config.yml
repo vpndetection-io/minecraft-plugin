@@ -3,7 +3,8 @@
 # Guide: https://docs.vpndetection.io/integrations/minecraft
 
 # Your API key. Run /vpnd login to sign in and have it filled in for you, or paste one from
-# https://app.vpndetection.io. Without a key only VPNs are checked, on a small daily allowance.
+# https://app.vpndetection.io. Without a key, every check below works but proxy, and hosting goes by
+# the network an address belongs to.
 api-key: ""
 
 # What happens when a joining player's address is one of these:
@@ -13,16 +14,17 @@ api-key: ""
 checks:
   # Commercial VPN servers.
   vpn: block
-  # Tor relays. Needs a key.
+  # Tor relays.
   tor: block
-  # Datacenters and cloud providers, where bots and self-hosted VPNs run. Needs a key.
+  # Datacenters and cloud providers, where bots and self-hosted VPNs run. Without a key, judged by
+  # the network an address belongs to; with one, address by address.
   hosting: block
-  # Residential, datacenter, mobile and public proxies. Needs a paid plan.
+  # Residential, datacenter, mobile and public proxies. Needs a key, a free one included.
   proxy: block
-  # Privacy relays and company web gateways, like iCloud Private Relay. Needs a key.
+  # Privacy relays and company web gateways, like iCloud Private Relay.
   relay: allow
 
-# Countries by two-letter code, like US, DE or BR. Needs a key.
+# Countries by two-letter code, like US, DE or BR.
 countries:
   # Refuse players from these countries.
   block: []

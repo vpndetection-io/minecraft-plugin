@@ -42,9 +42,9 @@ public enum Check {
         }
     },
     HOSTING {
-        // A free key's answer carries no hosting flag but does say what kind of network announces
-        // the address, which tells a datacenter apart from an ISP well enough to keep bots out. The
-        // flag, where the plan serves it, is per address and wins.
+        // An answer without a key carries no hosting flag but does say what kind of network
+        // announces the address, which tells a datacenter apart from an ISP well enough to keep bots
+        // out. The flag, which a key's answer carries, is per address and wins.
         @Override
         boolean served(Result result) {
             return result.isHosting().isPresent() || result.asn().isPresent();

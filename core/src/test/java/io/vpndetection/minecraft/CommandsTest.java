@@ -87,13 +87,12 @@ class CommandsTest {
     }
 
     @Test
-    void checkOnAnAddressThePlanAnswersLittleOfSaysSo() throws Exception {
+    void checkWithNoKeySaysWhatTheAnswerLeavesOut() throws Exception {
         api.answer("/1.2.3.4", Answers.keyless("1.2.3.4", false));
         run("check", "1.2.3.4");
         waitForLines(4);
-        assertEquals("VPN no, Tor not in your plan, hosting not in your plan, proxy not in your plan, "
-                + "relay not in your plan", said.get(1));
-        assertEquals("Country not in your plan, network not in your plan", said.get(2));
+        assertEquals("VPN no, Tor no, hosting not in your plan, proxy not in your plan, relay no", said.get(1));
+        assertEquals("Country Brazil (BR), network AS28573 Claro NXT (isp)", said.get(2));
         assertEquals("A login gets: let in", said.get(3));
     }
 
@@ -143,7 +142,7 @@ class CommandsTest {
         assertEquals("Checks: vpn block, tor block, hosting block, proxy block, relay allow", said.get(1));
         assertEquals("Since the server started: 0 logins checked, 0 refused, 0 flagged, 0 bypassed, 0 lookups failed.",
                 said.get(2));
-        assertEquals("No API key, so only VPNs are checked. Run /vpnd login to sign in.", said.get(3));
+        assertEquals("No API key, so proxies aren't checked. Run /vpnd login to sign in.", said.get(3));
     }
 
     @Test

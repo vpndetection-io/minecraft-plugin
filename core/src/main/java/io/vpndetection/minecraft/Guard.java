@@ -115,8 +115,8 @@ final class Guard {
         }
         Optional<Location> location = result.location();
         if (location.isEmpty()) {
-            warnOnce.accept("countries need an API key: without one, no answer says where an address is. "
-                    + "Run /vpnd login to sign in.");
+            warnOnce.accept("countries are set, but the answer says nothing of where the address is, "
+                    + "so they never match.");
             return;
         }
         // A country we can't place, an anycast address say, is let in rather than guessed at.
@@ -134,9 +134,6 @@ final class Guard {
 
     // Why a check's answer is missing, as config.yml's comments put it.
     private String needs(Check check) {
-        if (check == Check.PROXY) {
-            return "only a paid plan answers it";
-        }
         return settings.apiKey == null ? "it needs an API key (run /vpnd login)"
                 : "your plan doesn't answer it";
     }
