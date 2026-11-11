@@ -6,7 +6,7 @@
 
     <groupId>io.vpndetection</groupId>
     <artifactId>vpndetection-minecraft</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
     <packaging>pom</packaging>
 
     <name>VPNDetection for Minecraft</name>

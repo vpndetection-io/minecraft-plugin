@@ -2,6 +2,12 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.0.6 - 2026-11-11
+
+### Features
+
+- Say what a lookup without a key checks: every check but proxy ([`1a582b0`](https://github.com/vpndetection-io/minecraft-plugin/commit/1a582b0d4421b80b79038d1fa00ac30848778591))
+
 ## 1.0.5 - 2026-11-08
 
 ### Fixes
