@@ -15,6 +15,8 @@ final class Answers {
             + "\"currency_symbol\":\"\",\"flag_emoji\":\"\",\"flag_unicode\":\"\"}";
     static final String ASN_M247 = "{\"asn\":9009,\"name\":\"M247 Europe SRL\",\"domain\":\"m247global.com\","
             + "\"type\":\"hosting\",\"prefix\":\"146.70.116.0/24\"}";
+    static final String ASN_CLOUDFLARE = "{\"asn\":13335,\"name\":\"Cloudflare, Inc.\",\"domain\":\"cloudflare.com\","
+            + "\"type\":\"hosting\",\"prefix\":\"104.28.0.0/16\"}";
     static final String ASN_ISP = "{\"asn\":28573,\"name\":\"Claro NXT\",\"domain\":\"claro.com.br\","
             + "\"type\":\"isp\",\"prefix\":\"177.0.0.0/14\"}";
 
@@ -23,6 +25,23 @@ final class Answers {
         return "{\"ip\":\"" + ip + "\",\"is_vpn\":" + vpn + ",\"is_relay\":false,\"is_tor\":" + tor
                 + ",\"relay\":{},\"tor\":" + (tor ? "{\"provider\":\"\",\"confidence\":\"high\",\"last_seen\":\"2026-10-20\"}" : "{}")
                 + ",\"location\":" + location + ",\"asn\":" + asn + "}";
+    }
+
+    /** No key: a Cloudflare WARP exit, a relay on a network typed hosting. */
+    static String keylessRelay(String ip) {
+        return "{\"ip\":\"" + ip + "\",\"is_vpn\":false,\"is_relay\":true,\"is_tor\":false,"
+                + "\"relay\":{\"provider\":\"cloudflare_warp\",\"confidence\":\"high\",\"last_seen\":\"2026-11-13\"},"
+                + "\"tor\":{},\"location\":" + LOCATION_AT + ",\"asn\":" + ASN_CLOUDFLARE + "}";
+    }
+
+    /** A paid plan: the same WARP exit, which answers is_hosting as well as is_relay. */
+    static String paidRelay(String ip) {
+        return "{\"ip\":\"" + ip + "\",\"is_vpn\":false,\"is_hosting\":true,\"is_relay\":true,\"is_tor\":false,"
+                + "\"is_cdn\":false,\"is_resproxy\":false,\"is_dcproxy\":false,\"is_mobproxy\":false,\"is_pubproxy\":false,"
+                + "\"vpn\":{},\"hosting\":{\"provider\":\"cloudflare\",\"confidence\":\"high\",\"last_seen\":\"2026-11-13\"},"
+                + "\"relay\":{\"provider\":\"cloudflare_warp\",\"confidence\":\"high\",\"last_seen\":\"2026-11-13\"},"
+                + "\"tor\":{},\"cdn\":{},\"resproxy\":{},\"dcproxy\":{},\"mobproxy\":{},\"pubproxy\":{},"
+                + "\"location\":" + LOCATION_AT + ",\"asn\":" + ASN_CLOUDFLARE + "}";
     }
 
     /** No key, from a home connection in Brazil. */

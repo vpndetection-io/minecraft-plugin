@@ -86,6 +86,24 @@ class GuardTest {
     }
 
     @Test
+    void theShippedDefaultsLetARelayOnAHostingNetworkIn() throws Exception {
+        String ip = "104.28.60.1";
+        api.answer("/" + ip, Answers.keylessRelay(ip));
+        assertEquals(Action.ALLOW, check(guard("", ""), ip).action());
+    }
+
+    @Test
+    void aRelayThatAlsoAnswersHostingIsJudgedAsARelayAlone() throws Exception {
+        String ip = "104.28.60.1";
+        api.answer("/" + ip, Answers.paidRelay(ip));
+        assertEquals(Action.ALLOW,
+                check(guard("api-key: \"vd_test_0123456789abcdef\"\nchecks: {hosting: block, relay: allow}", ""), ip).action());
+        Verdict verdict = check(guard("api-key: \"vd_test_0123456789abcdef\"\nchecks: {hosting: alert, relay: block}", ""), ip);
+        assertEquals(Action.BLOCK, verdict.action());
+        assertEquals(List.of("privacy relay (cloudflare_warp)"), verdict.reasons());
+    }
+
+    @Test
     void aFreePlanKeyPastItsDailyTrialIsAnsweredAsUnlimitedAndSaysWhatItLacks() throws Exception {
         String ip = "146.70.116.130";
         api.answer("/" + ip, Answers.trial(Answers.keyless(ip, false, false, Answers.LOCATION_AT, Answers.ASN_M247), true));
