@@ -2,6 +2,12 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.0.11 - 2026-11-14
+
+### Fixes
+
+- Judge a privacy relay by relay alone, even on a hosting network ([`ee2c561`](https://github.com/vpndetection-io/minecraft-plugin/commit/ee2c561b69265f52e135cfe623ae8d3a1f891d03))
+
 ## 1.0.10 - 2026-11-12
 
 ### Fixes
