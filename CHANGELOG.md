@@ -2,6 +2,12 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.0.12 - 2026-11-20
+
+### Fixes
+
+- Messages, config and store text: the free trial without a count ([`cdb5424`](https://github.com/vpndetection-io/minecraft-plugin/commit/cdb5424e17aef0688dbac02179238acfdfdfa2bc))
+
 ## 1.0.11 - 2026-11-14
 
 ### Fixes
