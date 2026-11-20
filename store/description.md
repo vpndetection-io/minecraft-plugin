@@ -23,7 +23,7 @@
 ## 🎁 Free to start
 
 - No account: VPNs, Tor, hosting networks, privacy relays and countries, on every join
-- Free account, signed in with `/vpnd login`: every check, proxies included, for 100 lookups a day
+- Free account, signed in with `/vpnd login`: try every check, proxies included
 - Paid plan: every check on every join, with the provider named in your messages
 
 ## 🚀 Built for busy servers

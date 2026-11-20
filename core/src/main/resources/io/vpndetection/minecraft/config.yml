@@ -4,8 +4,8 @@
 
 # Your API key. Run /vpnd login to sign in and have it filled in for you, or paste one from
 # https://app.vpndetection.io. Without a key, every check below works but proxy, and hosting goes by
-# the network an address belongs to. Signed in, a server tries every check, 100 lookups a day, and a
-# paid plan answers them all on every login.
+# the network an address belongs to. Signed in, a server tries every check, and a paid plan answers
+# them all on every login.
 api-key: ""
 
 # What happens when a joining player's address is one of these:

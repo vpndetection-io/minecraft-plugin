@@ -277,7 +277,7 @@ public final class Engine {
     private void checkKey(State current) {
         if (current.apiKey() == null) {
             platform.info("No API key, so proxies aren't checked, and hosting goes by the network an address "
-                    + "belongs to. Run /vpnd login to sign in and try both, 100 lookups a day; a paid plan checks "
+                    + "belongs to. Run /vpnd login to sign in and try both; a paid plan checks "
                     + "them on every login.");
             return;
         }

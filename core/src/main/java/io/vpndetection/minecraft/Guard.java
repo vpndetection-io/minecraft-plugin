@@ -135,8 +135,8 @@ final class Guard {
     // Why a check's answer is missing, as config.yml's comments put it.
     private String needs(Check check) {
         return settings.apiKey == null
-                ? "it needs a paid plan, which signing in tries for 100 lookups a day (run /vpnd login)"
-                : "the free plan answers it only for the first 100 lookups each day";
+                ? "it needs a paid plan, which signing in lets you try (run /vpnd login)"
+                : "the free plan answers it only while its trial lasts";
     }
 
     /** The reasons for each action seen, to report the strongest action's. */
