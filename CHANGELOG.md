@@ -2,6 +2,12 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.0.13 - 2026-11-22
+
+### Fixes
+
+- Count a free key's trial by the month, with the day it resets ([`b4d73f8`](https://github.com/vpndetection-io/minecraft-plugin/commit/b4d73f8f1e326877d60f699f65cb9dfa0ca6d2f5))
+
 ## 1.0.12 - 2026-11-20
 
 ### Fixes
