@@ -212,16 +212,18 @@ public final class Commands {
 
     /**
      * A plan and what is left of it, like "Starter plan, 1,234 of 250,000 lookups used, renewing 2026-12-01".
-     * The free plan, Unlimited (2026-11-11), answers every lookup with no cap and the first ones each UTC day
-     * with every field, its daily trial, which is what its usage counts, so it reads "Unlimited plan, 45 of
-     * 100 lookups with every field used today".
+     * The free plan, Unlimited, answers every lookup with no cap and the first ones in the API's window (a UTC
+     * calendar month since 2026-11-21) with every field, its trial, which is what its usage counts, so it reads
+     * "Unlimited plan, 45 of 100 lookups with every field used this month, resetting 2026-12-01".
      */
     static String usage(Entitlement entitlement) {
         String key = entitlement.getPlan() == null ? null : entitlement.getPlan().getKey();
         if (FREE_PLAN.equals(key) && entitlement.getUsage() != null
                 && entitlement.getUsage().getRequests() != null && entitlement.getUsage().getQuota() != null) {
-            return String.format(Locale.ROOT, "Unlimited plan, %,d of %,d lookups with every field used today",
-                    entitlement.getUsage().getRequests(), entitlement.getUsage().getQuota());
+            String free = String.format(Locale.ROOT, "Unlimited plan, %,d of %,d lookups with every field used "
+                    + "this month", entitlement.getUsage().getRequests(), entitlement.getUsage().getQuota());
+            return entitlement.getUsage().getWindowEnd() == null ? free
+                    : free + ", resetting " + entitlement.getUsage().getWindowEnd().toLocalDate();
         }
         String plan = entitlement.getPlan() == null || entitlement.getPlan().getKey() == null ? "your"
                 : capitalize(entitlement.getPlan().getKey());
