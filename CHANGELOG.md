@@ -2,6 +2,12 @@
 
 What each release changed for you, newest first. Each line is a commit's summary, linked to its full description and diff.
 
+## 1.0.14 - 2026-11-27
+
+### Fixes
+
+- /vpnd status names no plan by its key, and the trial as a window ([`f6a951a`](https://github.com/vpndetection-io/minecraft-plugin/commit/f6a951a48ba62862855a1b65f30314dd9fa726a9))
+
 ## 1.0.13 - 2026-11-22
 
 ### Fixes
