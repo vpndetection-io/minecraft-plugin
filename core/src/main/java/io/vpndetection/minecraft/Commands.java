@@ -211,22 +211,23 @@ public final class Commands {
     static final String FREE_PLAN = "free";
 
     /**
-     * A plan and what is left of it, like "Starter plan, 1,234 of 250,000 lookups used, renewing 2026-12-01".
-     * The free plan, Unlimited, answers every lookup with no cap and the first ones in the API's window (a UTC
-     * calendar month since 2026-11-21) with every field, its trial, which is what its usage counts, so it reads
-     * "Unlimited plan, 45 of 100 lookups with every field used this month, resetting 2026-12-01".
+     * A plan and what is left of it, {@code <plan> plan, <used> of <quota> lookups used, renewing <date>}. The
+     * free plan, Unlimited, answers every lookup with no cap, and with every field through its trial, which is
+     * what its usage counts: {@code Unlimited plan, <used> of <limit> lookups with every field used in its trial
+     * to <date>}. No figure is written here: each is the API's. A paid plan reads "Paid" until the SDK names
+     * plans as the API does (its {@code EntitlementPlan.name}, after 6.13.0): its key is never a name, and the
+     * Data plan's, {@code data_1} and on, read "Data_1".
      */
     static String usage(Entitlement entitlement) {
         String key = entitlement.getPlan() == null ? null : entitlement.getPlan().getKey();
+        String plan = key == null ? "your" : FREE_PLAN.equals(key) ? "Unlimited" : "Paid";
         if (FREE_PLAN.equals(key) && entitlement.getUsage() != null
                 && entitlement.getUsage().getRequests() != null && entitlement.getUsage().getQuota() != null) {
-            String free = String.format(Locale.ROOT, "Unlimited plan, %,d of %,d lookups with every field used "
-                    + "this month", entitlement.getUsage().getRequests(), entitlement.getUsage().getQuota());
+            String free = String.format(Locale.ROOT, "%s plan, %,d of %,d lookups with every field used in its "
+                    + "trial", plan, entitlement.getUsage().getRequests(), entitlement.getUsage().getQuota());
             return entitlement.getUsage().getWindowEnd() == null ? free
-                    : free + ", resetting " + entitlement.getUsage().getWindowEnd().toLocalDate();
+                    : free + " to " + entitlement.getUsage().getWindowEnd().toLocalDate();
         }
-        String plan = entitlement.getPlan() == null || entitlement.getPlan().getKey() == null ? "your"
-                : capitalize(entitlement.getPlan().getKey());
         StringBuilder out = new StringBuilder(plan + " plan");
         if (entitlement.getUsage() != null) {
             Long requests = entitlement.getUsage().getRequests();
@@ -315,10 +316,6 @@ public final class Commands {
             case ALERT -> "&elet in, and staff alerted&7, for " + verdict.reason();
             case ALLOW -> "&alet in";
         };
-    }
-
-    private static String capitalize(String word) {
-        return word.isEmpty() ? word : Character.toUpperCase(word.charAt(0)) + word.substring(1);
     }
 
     private static void say(Sender sender, String text) {

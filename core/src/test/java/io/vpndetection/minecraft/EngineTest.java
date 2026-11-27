@@ -23,11 +23,16 @@ class EngineTest {
             + "\"apikey\":{\"id\":\"10c2b437-3aa2-4a63-bd17-8e7c8c7f0def\",\"expires\":null,\"allowed_cidrs\":[]},"
             + "\"plan\":{\"key\":\"starter\",\"tier\":\"starter\"},\"usage\":{\"requests\":545,\"quota\":250000,"
             + "\"hard_limit\":null,\"window_start\":\"2026-10-01T00:00:00Z\",\"window_end\":\"2026-11-01T00:00:00Z\"}}";
-    // An organization on the free plan, Unlimited: its usage counts the UTC month's lookups with every field.
+    // An organization on the free plan, Unlimited: its usage counts its trial's lookups with every field, over the
+    // trial's window, against its limit (the API's figures, whatever they are).
     private static final String FREE_PLAN_ENTITLEMENT = "{\"org_id\":\"f32191d0-ef02-450e-a505-eb5814c35cab\","
             + "\"apikey\":{\"id\":\"10c2b437-3aa2-4a63-bd17-8e7c8c7f0def\",\"expires\":null,\"allowed_cidrs\":[]},"
-            + "\"plan\":{\"key\":\"free\",\"tier\":\"free\"},\"usage\":{\"requests\":45,\"quota\":100,"
-            + "\"hard_limit\":null,\"window_start\":\"2026-11-01T00:00:00Z\",\"window_end\":\"2026-12-01T00:00:00Z\"}}";
+            + "\"plan\":{\"key\":\"free\",\"name\":\"Unlimited\",\"tier\":\"free\"},\"usage\":{\"requests\":45,"
+            + "\"quota\":100,\"hard_limit\":null,\"window_start\":\"2026-11-24T00:00:00Z\","
+            + "\"window_end\":\"2026-12-01T00:00:00Z\"}}";
+    // An organization on one of the Data plan's quotas, whose key (data_4) is never what a player reads.
+    private static final String DATA_ENTITLEMENT = ENTITLEMENT.replace("{\"key\":\"starter\",\"tier\":\"starter\"}",
+            "{\"key\":\"data_4\",\"name\":\"Data\",\"tier\":\"max\"}");
 
     @TempDir
     Path dir;
@@ -142,7 +147,7 @@ class EngineTest {
         Files.writeString(dir.resolve("config.yml"), "api-key: \"vd_test_0123456789abcdef\"\n");
         enable();
         String said = waitFor(platform.infos, "Signed in");
-        assertEquals("Signed in with vd_t...cdef from config.yml: Starter plan, 545 of 250,000 lookups used, "
+        assertEquals("Signed in with vd_t...cdef from config.yml: Paid plan, 545 of 250,000 lookups used, "
                 + "renewing 2026-11-01.", said);
         assertEquals("Bearer vd_test_0123456789abcdef", api.requests.get(0).header("Authorization"));
     }
@@ -154,7 +159,17 @@ class EngineTest {
         Files.writeString(dir.resolve("config.yml"), "api-key: \"vd_test_0123456789abcdef\"\n");
         enable();
         assertEquals("Signed in with vd_t...cdef from config.yml: Unlimited plan, 45 of 100 lookups with every "
-                + "field used this month, resetting 2026-12-01.", waitFor(platform.infos, "Signed in"));
+                + "field used in its trial to 2026-12-01.", waitFor(platform.infos, "Signed in"));
+    }
+
+    @Test
+    void aDataPlanIsNeverNamedByItsKey() throws Exception {
+        api.answer("/api/v1/entitlement", DATA_ENTITLEMENT);
+        Files.createDirectories(dir);
+        Files.writeString(dir.resolve("config.yml"), "api-key: \"vd_test_0123456789abcdef\"\n");
+        enable();
+        assertEquals("Signed in with vd_t...cdef from config.yml: Paid plan, 545 of 250,000 lookups used, "
+                + "renewing 2026-11-01.", waitFor(platform.infos, "Signed in"));
     }
 
     @Test
